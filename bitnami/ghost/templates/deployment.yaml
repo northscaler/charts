@@ -1,25 +1,16 @@
 {{- if include "ghost.host" . -}}
-apiVersion: {{ template "ghost.deployment.apiVersion" . }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
 kind: Deployment
 metadata:
   name: {{ template "ghost.fullname" . }}
-  labels:
-    app: "{{ template "ghost.fullname" . }}"
-    chart: "{{ template "ghost.chart" . }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   selector:
-    matchLabels:
-      app: "{{ template "ghost.fullname" . }}"
-      release: {{ .Release.Name | quote }}
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   replicas: 1
   template:
     metadata:
-      labels:
-        app: "{{ template "ghost.fullname" . }}"
-        chart: "{{ template "ghost.chart" . }}"
-        release: {{ .Release.Name | quote }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
       {{- if .Values.securityContext.enabled }}
       securityContext:
@@ -173,6 +164,9 @@ spec:
         volumeMounts:
         - name: ghost-data
           mountPath: /bitnami/ghost
+      {{- if .Values.sidecars }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.sidecars "context" $ ) | nindent 6 }}
+      {{- end }}
       volumes:
       - name: ghost-data
       {{- if .Values.persistence.enabled }}
@@ -185,8 +179,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
+      {{- if .Values.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.affinity "context" $) | nindent 8 }}
       {{- end }}
 {{- end -}}
