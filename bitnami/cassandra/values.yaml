@@ -152,6 +152,10 @@ resources:
 ##
 # existingConfiguration:
 
+## ConfigMap configuration files glob pattern
+##
+confFilesGlob: "files/conf/*"
+
 ## Cluster parameters
 ##
 cluster:
@@ -195,6 +199,10 @@ dbUser:
 ## and pre-populating data
 ##
 # initDBConfigMap:
+
+## Database initialization files glob pattern
+##
+initDBFilesGlob: "files/docker-entrypoint-initdb.d/*"
 
 ## Cassandra container's liveness and readiness probes
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
