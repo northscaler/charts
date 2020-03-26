@@ -16,6 +16,9 @@ spec:
       securityContext:
         fsGroup: {{ .Values.securityContext.fsGroup }}
         runAsUser: {{ .Values.securityContext.runAsUser }}
+      {{- if .Values.initContainers }}
+      initContainers: {{- include "common.tplvalues.render" ( dict "value" .Values.initContainers "context" $ ) | nindent 6 }}
+      {{- end }}
       {{- else }}
       initContainers:
       - name: volume-permissions
@@ -25,6 +28,9 @@ spec:
         volumeMounts:
         - mountPath: {{ .Values.persistence.path }}
           name: ghost-data
+      {{- if .Values.initContainers }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.initContainers "context" $ ) | nindent 6 }}
+      {{- end }}
       {{- end }}
 {{- include "ghost.imagePullSecrets" . | indent 6 }}
       containers:

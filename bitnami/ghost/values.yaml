@@ -303,3 +303,12 @@ affinity: {}
 ##       - name: portname
 ##         containerPort: 1234
 sidecars: []
+
+## Add init containers to the pod
+## For example:
+## initContainers:
+##   - name: your-image-name
+##     image: your-image
+##     imagePullPolicy: Always
+##
+initContainers: []
