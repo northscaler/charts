@@ -170,6 +170,9 @@ spec:
         volumeMounts:
         - name: ghost-data
           mountPath: /bitnami/ghost
+        {{- if .Values.extraVolumeMounts }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.extraVolumeMounts "context" $ ) | nindent 8 }}
+        {{- end }}
       {{- if .Values.sidecars }}
       {{- include "common.tplvalues.render" ( dict "value" .Values.sidecars "context" $ ) | nindent 6 }}
       {{- end }}
@@ -180,6 +183,9 @@ spec:
           claimName: {{ template "ghost.fullname" . }}
       {{- else }}
         emptyDir: {}
+      {{- end }}
+      {{- if .Values.extraVolumes }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.extraVolumes "context" $ ) | nindent 6 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
